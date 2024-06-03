@@ -11,6 +11,8 @@ const CreateTool = () => {
         fecha_adquisicion: "",
         ultimo_mantenimiento: "",
         ubicacion_actual: "",
+        codigo_herramienta: "",
+        foto_url: null,
     };
 
     const [formData, setFormData] = useState(initialFormData);
@@ -23,22 +25,35 @@ const CreateTool = () => {
     });
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value, files } = e.target;
+        if (files) {
+            setFormData({ ...formData, [name]: files[0] });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const token = localStorage.getItem("token");
+            const data = new FormData();
+
+            for (const key in formData) {
+                data.append(key, formData[key]);
+            }
+
             const response = await axios.post(
                 "http://127.0.0.1:8000/api/herramientas",
-                formData,
+                data,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data",
                     },
                 }
             );
+
             setSnackbar({
                 message: "¡Herramienta creada exitosamente! 🚀",
                 type: "success",
@@ -60,6 +75,7 @@ const CreateTool = () => {
                 ),
                 isVisible: true,
             });
+
             setFormData(initialFormData);
             setErrors({});
         } catch (error) {
@@ -249,7 +265,7 @@ const CreateTool = () => {
                         )}
                     </div>
 
-                    <div className="md:col-span-2">
+                    <div>
                         <label
                             htmlFor="ubicacion_actual"
                             className="block text-gray-700"
@@ -271,24 +287,68 @@ const CreateTool = () => {
                             </span>
                         )}
                     </div>
+
+                    <div>
+                        <label htmlFor="codigo_herramienta" className="block text-gray-700">
+                            Código de Herramienta:
+                        </label>
+                        <input
+                            type="text"
+                            id="codigo_herramienta"
+                            name="codigo_herramienta"
+                            value={formData.codigo_herramienta || ""}
+                            onChange={handleChange}
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
+                            required
+                            autoComplete="off"
+                            pattern="\d*"
+                            maxLength="10"
+                        />
+                        {errors.codigo_herramienta && (
+                            <span className="text-red-500">{errors.codigo_herramienta[0]}</span>
+                        )}
+                    </div>
+
+                    <div className="md:col-span-2">
+                        <label
+                            htmlFor="foto_url"
+                            className="block text-gray-700"
+                        >
+                            Foto:
+                        </label>
+                        <input
+                            type="file"
+                            id="foto_url"
+                            name="foto_url"
+                            onChange={handleChange}
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
+                            autoComplete="off"
+                        />
+                        {errors.foto_url && (
+                            <span className="text-red-500">
+                                {errors.foto_url[0]}
+                            </span>
+                        )}
+                    </div>
                 </div>
 
                 <button
                     type="submit"
-                    className="mt-6 w-full bg-indigo-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
+                    className="mt-6 w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
                 >
                     Crear Herramienta
                 </button>
             </form>
-            <Snackbar
-                message={snackbar.message}
-                type={snackbar.type}
-                icon={snackbar.icon}
-                isVisible={snackbar.isVisible}
-                setIsVisible={(isVisible) =>
-                    setSnackbar((prev) => ({ ...prev, isVisible }))
-                }
-            />
+
+            {snackbar.isVisible && (
+                <Snackbar
+                    message={snackbar.message}
+                    type={snackbar.type}
+                    icon={snackbar.icon}
+                    isVisible={snackbar.isVisible}
+                    onClose={() => setSnackbar({ ...snackbar, isVisible: false })}
+                />
+            )}
         </div>
     );
 };

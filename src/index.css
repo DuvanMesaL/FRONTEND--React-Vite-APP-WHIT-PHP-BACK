@@ -1,3 +1,14 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden; /* Esto evita el desplazamiento horizontal global */
+}
+
+html, body, #root {
+    height: 100%;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

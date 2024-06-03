@@ -1,11 +1,10 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
     return (
-        <div className="h-screen flex flex-col bg-gray-800 text-white w-64">
+        <div className="h-screen flex flex-col bg-gray-800 text-white w-64 fixed">
             <div className="flex items-center justify-center h-20 shadow-md">
-                <h1 className="text-3xl font-semibold">MyApp</h1>
+                <h1 className="text-3xl font-semibold">AQ Inventory</h1>
             </div>
             <nav className="flex-grow mt-10">
                 <ul className="space-y-2">
@@ -15,6 +14,14 @@ const Sidebar = () => {
                             className="flex items-center px-6 py-2 hover:bg-gray-700"
                         >
                             Create Tool
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            to="/herramientas"
+                            className="flex items-center px-6 py-2 hover:bg-gray-700"
+                        >
+                            Herramientas
                         </Link>
                     </li>
                     <li>
