@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import PropTypes from 'prop-types';
 
 const Login = () => {
     const [formData, setFormData] = useState({ email: "", password: "" });
@@ -19,7 +20,7 @@ const Login = () => {
                 formData
             );
             localStorage.setItem("token", response.data.token);
-            navigate("/create-tool"); // Redirigir a la página de creación de herramientas
+            navigate("/create-tool");
         } catch (error) {
             setError("Invalid credentials");
         }
@@ -33,36 +34,26 @@ const Login = () => {
             >
                 <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
                 {error && <div className="mb-4 text-red-500">{error}</div>}
-                <div className="mb-4">
-                    <label htmlFor="email" className="block text-gray-700">
-                        Email:
-                    </label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
-                        required
-                        autoComplete="email"
-                    />
-                </div>
-                <div className="mb-4">
-                    <label htmlFor="password" className="block text-gray-700">
-                        Password:
-                    </label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
-                        required
-                        autoComplete="current-password"
-                    />
-                </div>
+                <InputField 
+                    label="Email" 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    value={formData.email} 
+                    onChange={handleChange} 
+                    required 
+                    autoComplete="email" 
+                />
+                <InputField 
+                    label="Password" 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    value={formData.password} 
+                    onChange={handleChange} 
+                    required 
+                    autoComplete="current-password" 
+                />
                 <button
                     type="submit"
                     className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-200"
@@ -72,6 +63,33 @@ const Login = () => {
             </form>
         </div>
     );
+};
+
+const InputField = ({ label, type, id, name, value, onChange, required, autoComplete }) => (
+    <div className="mb-4">
+        <label htmlFor={id} className="block text-gray-700">{label}:</label>
+        <input
+            type={type}
+            id={id}
+            name={name}
+            value={value}
+            onChange={onChange}
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
+            required={required}
+            autoComplete={autoComplete}
+        />
+    </div>
+);
+
+InputField.propTypes = {
+    label: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    required: PropTypes.bool,
+    autoComplete: PropTypes.string,
 };
 
 export default Login;

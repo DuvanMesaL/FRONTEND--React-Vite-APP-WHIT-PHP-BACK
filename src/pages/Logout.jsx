@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import PropTypes from 'prop-types';
 import Snackbar from "../components/Snackbar";
 
 const Logout = () => {
@@ -15,7 +16,7 @@ const Logout = () => {
     useEffect(() => {
         const logout = async () => {
             try {
-                const token = localStorage.getItem("token"); // O sessionStorage.getItem('token')
+                const token = localStorage.getItem("token"); 
                 if (!token) {
                     setSnackbar({
                         message: "No estás logueado.",
@@ -54,7 +55,7 @@ const Logout = () => {
                         },
                     }
                 );
-                localStorage.removeItem("token"); // O sessionStorage.removeItem('token')
+                localStorage.removeItem("token"); 
                 setSnackbar({
                     message: "Has cerrado sesión exitosamente.",
                     type: "success",
@@ -127,6 +128,14 @@ const Logout = () => {
             />
         </div>
     );
+};
+
+Logout.propTypes = {
+    message: PropTypes.string,
+    type: PropTypes.string,
+    icon: PropTypes.element,
+    isVisible: PropTypes.bool,
+    setIsVisible: PropTypes.func,
 };
 
 export default Logout;
